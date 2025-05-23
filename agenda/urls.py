@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
 
-app_name = 'dashboard'
+app_name = 'agenda'
+
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<int:child_id>/', views.child_list, name='child_list'),
+    
 ]

@@ -4,12 +4,12 @@ from django.db import models
 class Child(models.Model):
     name = models.CharField(max_length=100)
     dn = models.DateField("data de nascimento")
-    height = models.IntegerField()
-    weight = models.IntegerField()
+    height = models.DecimalField(decimal_places=2, max_digits=3)
+    weight = models.DecimalField(decimal_places=3, max_digits=6)
     #school = models.ForeignKey('School', on_delete=models.CASCADE)
     #health = models.ForeignKey('Health', on_delete=models.CASCADE)
     def __str__(self):
-        return super().__str__()
+        return self.name
 
 class School(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
@@ -18,7 +18,7 @@ class School(models.Model):
     classroom = models.CharField(max_length=10)
     teacher = models.CharField(max_length=100)
     def __str__(self):
-        return super().__str__()
+        return self.child.name+ " - "+self.name + " - " + self.classroom
 
 class Health(models.Model):
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
@@ -26,4 +26,7 @@ class Health(models.Model):
     plan = models.CharField(max_length=100)
     medication = models.CharField(max_length=100)
     def __str__(self):
-        return super().__str__()
+        return self.child.name + " - " + self.alergy
+    
+
+    
