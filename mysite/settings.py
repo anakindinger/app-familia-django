@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'agenda.apps.AgendaConfig',
-    'rotinas.apps.RotinasConfig',
+    'rotina.apps.RotinaConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
