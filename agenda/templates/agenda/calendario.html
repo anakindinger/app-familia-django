@@ -47,7 +47,7 @@
                   {% for evento in lista_eventos %}
                     {% if evento.date.day == day and evento.date.month == mes_atual and evento.date.year == ano_atual %}
                       <div class="bg-info-subtle rounded p-1 my-1 small" data-bs-toggle="collapse" data-bs-target="#evento-{{ evento.id }}" aria-expanded="false" aria-controls="evento-{{ evento.id }}">
-                        <strong>{{ evento.title }}</strong><br>
+                        <strong>{{ evento.description }}</strong><br>
                         {% if evento.description %}
                         {{ evento.description }}<br>
                         <span class="text-secondary small">{{ evento.hour_init|time:"H:i" }} - {{ evento.hour_end|time:"H:i" }}</span>
