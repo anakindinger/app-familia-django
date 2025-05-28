@@ -36,7 +36,18 @@
                             {% endif %}
                         </td>
                         <td>
-                            <!-- Aqui você pode adicionar lógica para mostrar as rotinas de amanhã, se desejar -->
+                            {% if rotina_amanha %}
+                                {% for rotina in rotina_amanha %}
+                                    <div>
+                                        <strong>{{ rotina.description }}</strong><br>
+                                        {{ rotina.start_time|time:'H:i' }} - {{ rotina.end_time|time:'H:i' }}<br>
+                                        
+                                    </div>
+                                    <hr>
+                                {% endfor %}
+                            {% else %}
+                                Nenhuma rotina para amanhã.
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>    

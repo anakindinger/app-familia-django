@@ -1,8 +1,7 @@
 .table-fixed-custom{
     table-layout: fixed;
     width: 100%;
-    margin-left: 10%;
-    margin-right: 10%;
+    
 
 }
 .table-fixed-custom td{
