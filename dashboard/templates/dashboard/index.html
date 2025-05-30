@@ -1,18 +1,12 @@
-<!DOCTYPE html>
-<html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-    <title>My test page</title>
-  </head>
-  <body>
-        {% if lista_criancas %}
-        <ul>
-            {% for crianca in lista_criancas.all %}
-                <li> {{crianca.name}} </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <p>Não há crianças cadastradas.</p>
-        {% endif %}
-    </body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+    {% if lista_criancas %}
+    <ul>
+        {% for crianca in lista_criancas.all %}
+            <li> {{crianca.name}} </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p>Não há crianças cadastradas.</p>
+    {% endif %}
+{% endblock %}

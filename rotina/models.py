@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from dashboard.models import Child
 
 
 class Routine(models.Model):
@@ -9,6 +10,8 @@ class Routine(models.Model):
     days_of_week = models.ManyToManyField('Weekday', related_name='routines', help_text='Dias da semana em que a rotina se aplica.')
     start_day = models.DateField(default=date.today)
     end_day = models.DateField(blank=True, null=True)
+    child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='rotinas')
+
     def __str__(self):
         return self.description
 
@@ -23,6 +26,6 @@ class Weekday(models.Model):
             ('7','DOM')
         ]
     day = models.CharField(choices=WEEK_DAYS, max_length=3, unique=True, help_text='Dia da semana para a rotina.')
+
     def __str__(self):
         return dict(self.WEEK_DAYS).get(self.day, self.day)
-    
