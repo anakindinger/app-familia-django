@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Routine, Weekday
 from datetime import date
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 '''def list_routines(request):
@@ -10,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
     }
     return render(request, 'rotina/list_routines.html', context)'''
 
+@login_required
 def rotina_hoje(request):
     today = date.today()
     weekday_map = {0: '1', 1: '2', 2: '3', 3: '4', 4: '5', 5: '6', 6: '7'}
@@ -29,6 +31,7 @@ def rotina_hoje(request):
     return render(request, 'rotina/rotinas.html', context)
 
 @csrf_exempt
+@login_required
 def cadastrar_rotina(request):
     if request.method == 'POST':
         descricao = request.POST.get('description')
@@ -60,12 +63,14 @@ def routine_details(request):
     return render(request, 'rotina/rotina.html', context)
 
 @csrf_exempt
+@login_required
 def excluir_rotina(request, rotina_id):
     if request.method == 'POST':
         Routine.objects.filter(id=rotina_id).delete()
     return redirect('rotina:rotina_hoje')
 
 @csrf_exempt
+@login_required
 def alterar_rotina(request, rotina_id):
     rotina = Routine.objects.get(id=rotina_id)
     if request.method == 'POST':
