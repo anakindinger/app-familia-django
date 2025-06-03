@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'agenda/calendario.css' %}">
 {% block content %}
 <h1>Calendário</h1>
 <!-- Filtro de criança -->
@@ -19,6 +20,9 @@
     </div>
   </form>
 </div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoEvento">
+    Novo Evento
+</button>
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
   <select id="mes" onchange="window.location.search='?mes='+this.value+'&ano='+document.getElementById('ano').value+'&child_id='+document.getElementById('child_id').value;">
     {% for m in meses %}
@@ -67,6 +71,20 @@
                         <p> {{ evento.hour_init|time:"H:i" }}</p>
                         <p class="card-text"><strong>Hora de término:</strong></p>
                         <p> {{ evento.hour_end|time:"H:i" }}</p>
+                        <form method="post" action="{% url 'agenda:excluir_evento' evento.id %}?child_id={{ selected_child.id }}" style="display:inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        </form>
+                        <button type="button" class="btn btn-warning btn-sm" 
+                                data-id="{{evento.id}}"
+                                data-description="{{evento.description|escapejs}}"
+                                data-hour-init="{{evento.hour_init|time:'H:i'}}"
+                                data-hour-end="{{evento.hour_end|time:'H:i'}}"
+                                data-date="{{evento.date|date:'Y-m-d'}}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEditarEventoUnico">
+                        Alterar
+                      </button>
                       </div>
                     {% endif %}
                   </div>
@@ -79,5 +97,41 @@
       {% endfor %}
     </tbody>
   </table>
+</div>
+<div class="modal fade" id="modalEditarEventoUnico" tabindex="-1" aria-labelledby="modalEditarEventoUnicoLabel" aria-hiden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="child_id" value="{{selected_child.id}}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarEventoUnicoLabel">Editar evento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <input type="text" class="form-control" name="description" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hora de início</label>
+            <input type="time" class="form-control" name="hour_init" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hora de fim</label>
+            <input type="time" class="form-control" name="hour_end" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Data</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}
