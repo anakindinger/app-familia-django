@@ -67,7 +67,7 @@ def cadastrar_evento(request):
         descricao = request.POST.get('description')
         hour_init = request.POST.get('hour_init')
         hour_end = request.POST.get('hour_end')
-        date = request.POST.getlist('date')
+        date = request.POST.get('date')
         child_id = request.POST.get('child_id')
         if not child_id or int(child_id) not in children_ids:
             return redirect('agenda:index')
@@ -78,13 +78,11 @@ def cadastrar_evento(request):
             hour_end=hour_end,
             child_id=child_id
         )
-        
         evento.save()
-        return redirect(f"{request.path}?child_id={child_id}")
+        # Redireciona para a agenda da criança selecionada
+        return redirect(f"/agenda/?child_id={child_id}")
     else:
-        children = Child.objects.filter(id__in=children_ids)
-        selected_child = children.first() if children else None
-        context = {'children': children, 'selected_child': selected_child}
+        context = get_child_context(request)
         return render(request, 'agenda/calendario.html', context)
 
 

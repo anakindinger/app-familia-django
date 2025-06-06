@@ -5,6 +5,11 @@
 
 {% block content %}
 <h1>Calendário</h1>
+<div class="d-flex justify-content-end align-items-center mb-2" style="margin-right: 10%;">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoEvento">
+      Novo Evento
+  </button>
+</div>
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
   <select id="mes" onchange="window.location.search='?mes='+this.value+'&ano='+document.getElementById('ano').value;">
     {% for m in meses %}
@@ -88,6 +93,42 @@
         <input type="hidden" name="child_id" value="{{selected_child.id}}">
         <div class="modal-header">
           <h5 class="modal-title" id="modalEditarEventoUnicoLabel">Editar evento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Descrição</label>
+            <input type="text" class="form-control" name="description" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hora de início</label>
+            <input type="time" class="form-control" name="hour_init" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Hora de fim</label>
+            <input type="time" class="form-control" name="hour_end" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Data</label>
+            <input type="date" class="form-control" name="date" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalNovoEvento" tabindex="-1" aria-labelledby="modalNovoEventoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'agenda:cadastrar_evento' %}">
+        {% csrf_token %}
+        <input type="hidden" name="child_id" value="{{ selected_child.id }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalNovoEventoLabel">Novo Evento</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
         <div class="modal-body">
