@@ -23,4 +23,5 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('agenda/', include('agenda.urls')),
     path('rotina/', include('rotina.urls')),
+    path('chat/', include('chat.urls', namespace='chat')),
 ]

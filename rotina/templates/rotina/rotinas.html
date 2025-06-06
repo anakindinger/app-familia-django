@@ -73,53 +73,55 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body">
-        <table class="table table-bordered table-hover">
-          <thead>
-            <tr>
-              <th>Descrição</th>
-              <th>Início</th>
-              <th>Fim</th>
-              <th>Data início</th>
-              <th>Data fim</th>
-              <th>Dias da semana</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for rotina in todas_rotinas %}
-            <tr>
-              <td>{{ rotina.description }}</td>
-              <td>{{ rotina.start_time|time:'H:i' }}</td>
-              <td>{{ rotina.end_time|time:'H:i' }}</td>
-              <td>{{ rotina.start_day|date:'d/m/Y' }}</td>
-              <td>{% if rotina.end_day %}{{ rotina.end_day|date:'d/m/Y' }}{% else %}-{% endif %}</td>
-              <td>
-                {% for dia in rotina.days_of_week.all %}{{ dia }}{% if not forloop.last %}, {% endif %}{% endfor %}
-              </td>
-              <td>
-                <form method="post" action="{% url 'rotina:excluir_rotina' rotina.id %}?child_id={{ selected_child.id }}" style="display:inline;">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
-                </form>
-                <button type="button" class="btn btn-warning btn-sm" data-edit-rotina
-                        data-bs-toggle="modal" 
-                        data-bs-target="#modalEditarRotinaUnico"       
-                        data-id="{{ rotina.id }}"
-                        data-description="{{ rotina.description|escapejs }}"
-                        data-start_time="{{ rotina.start_time|time:'H:i' }}"
-                        data-end_time="{{ rotina.end_time|time:'H:i' }}"
-                        data-start_day="{{ rotina.start_day|date:'Y-m-d' }}"
-                        data-end_day="{% if rotina.end_day %}{{ rotina.end_day|date:'Y-m-d' }}{% endif %}"
-                        data-dias="{% for dia in rotina.days_of_week.all %}{{ dia.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
-                Alterar
-                </button>
-              </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="7">Nenhuma rotina cadastrada.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Data início</th>
+                <th>Data fim</th>
+                <th>Dias da semana</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rotina in todas_rotinas %}
+              <tr>
+                <td>{{ rotina.description }}</td>
+                <td>{{ rotina.start_time|time:'H:i' }}</td>
+                <td>{{ rotina.end_time|time:'H:i' }}</td>
+                <td>{{ rotina.start_day|date:'d/m/Y' }}</td>
+                <td>{% if rotina.end_day %}{{ rotina.end_day|date:'d/m/Y' }}{% else %}-{% endif %}</td>
+                <td>
+                  {% for dia in rotina.days_of_week.all %}{{ dia }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </td>
+                <td>
+                  <form method="post" action="{% url 'rotina:excluir_rotina' rotina.id %}?child_id={{ selected_child.id }}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                  </form>
+                  <button type="button" class="btn btn-warning btn-sm" data-edit-rotina
+                          data-bs-toggle="modal" 
+                          data-bs-target="#modalEditarRotinaUnico"       
+                          data-id="{{ rotina.id }}"
+                          data-description="{{ rotina.description|escapejs }}"
+                          data-start_time="{{ rotina.start_time|time:'H:i' }}"
+                          data-end_time="{{ rotina.end_time|time:'H:i' }}"
+                          data-start_day="{{ rotina.start_day|date:'Y-m-d' }}"
+                          data-end_day="{% if rotina.end_day %}{{ rotina.end_day|date:'Y-m-d' }}{% endif %}"
+                          data-dias="{% for dia in rotina.days_of_week.all %}{{ dia.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                  Alterar
+                  </button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7">Nenhuma rotina cadastrada.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

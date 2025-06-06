@@ -7,11 +7,37 @@ from usuario.models import UsuarioChild
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
+@login_required
 def index(request):
-    lista_criancas = Child.objects.order_by('name')
-    template = loader.get_template('dashboard/index.html')
+    # Filtra apenas as crianças associadas ao usuário
+    children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
+    children = Child.objects.filter(id__in=children_ids).order_by('name')
+    # Seleciona a criança ativa
+    child_id = request.GET.get('child_id')
+    if child_id and child_id.isdigit() and int(child_id) in children_ids:
+        selected_child = get_object_or_404(Child, id=child_id)
+    else:
+        selected_child = children.first() if children else None
+    perfil = None
+    if selected_child:
+        escola = School.objects.filter(child=selected_child).first()
+        saude = Health.objects.filter(child=selected_child).first()
+        from agenda.models import Evento
+        from rotina.models import Routine
+        ultimos_eventos = Evento.objects.filter(child=selected_child).order_by('-date', '-hour_init')[:3]
+        ultimas_rotinas = Routine.objects.filter(child=selected_child).order_by('-start_day', '-start_time')[:3]
+        updates = list(ultimos_eventos) + list(ultimas_rotinas)
+        updates.sort(key=lambda x: getattr(x, 'date', getattr(x, 'start_day', None)) or getattr(x, 'start_day', None), reverse=True)
+        perfil = {
+            'child': selected_child,
+            'school': escola,
+            'health': saude,
+            'updates': updates[:3],
+        }
     context = {
-        'lista_criancas': lista_criancas,
+        'perfil': perfil,
+        'children': children,
+        'selected_child': selected_child,
     }
     return render(request, 'dashboard/index.html', context)
 # Create your views here.

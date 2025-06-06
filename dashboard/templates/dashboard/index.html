@@ -1,12 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if lista_criancas %}
-    <ul>
-        {% for crianca in lista_criancas.all %}
-            <li> {{crianca.name}} </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-        <p>Não há crianças cadastradas.</p>
-    {% endif %}
+  {% if perfil %}
+    <h1>Perfil de {{ perfil.child.name }}</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6 mb-4">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body">
+            <h4 class="card-title">{{ perfil.child.name }}</h4>
+            <p><strong>Data de Nascimento:</strong> {{ perfil.child.dn|date:'d/m/Y' }}</p>
+            <p><strong>Altura:</strong> {{ perfil.child.height }} m</p>
+            <p><strong>Peso:</strong> {{ perfil.child.weight }} kg</p>
+            {% if perfil.school %}
+              <hr>
+              <h6>Escola</h6>
+              <p><strong>Nome:</strong> {{ perfil.school.name }}</p>
+              <p><strong>Telefone:</strong> {{ perfil.school.telephone }}</p>
+              <p><strong>Turma:</strong> {{ perfil.school.classroom }}</p>
+              <p><strong>Professor(a):</strong> {{ perfil.school.teacher }}</p>
+            {% endif %}
+            {% if perfil.health %}
+              <hr>
+              <h6>Saúde</h6>
+              <p><strong>Alergia:</strong> {{ perfil.health.alergy }}</p>
+              <p><strong>Convênio:</strong> {{ perfil.health.plan }}</p>
+              <p><strong>Medicação:</strong> {{ perfil.health.medication }}</p>
+            {% endif %}
+            <hr>
+            <h6>Últimas atualizações</h6>
+            {% if perfil.updates %}
+              <ul class="list-group list-group-flush">
+                {% for up in perfil.updates %}
+                  <li class="list-group-item">
+                    {% if up.description and up.date %}
+                      <strong>Evento:</strong> {{ up.description }}<br>
+                      <span class="text-secondary small">{{ up.date|date:'d/m/Y' }} {{ up.hour_init|default:'' }}</span>
+                    {% elif up.description and up.start_day %}
+                      <strong>Rotina:</strong> {{ up.description }}<br>
+                      <span class="text-secondary small">{{ up.start_day|date:'d/m/Y' }} {{ up.start_time|default:'' }}</span>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="text-muted">Nenhuma atualização recente.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>Não há criança selecionada ou cadastrada para este usuário.</p>
+  {% endif %}
 {% endblock %}
