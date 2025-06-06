@@ -36,6 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
       // Abre o modal
       const bsModal = new bootstrap.Modal(modal);
       bsModal.show();
+      // Corrige bug do backdrop/fade persistente
+      modal.addEventListener('hidden.bs.modal', function handler() {
+        document.body.classList.remove('modal-open');
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        modal.removeEventListener('hidden.bs.modal', handler);
+      });
     });
   });
 });

@@ -5,6 +5,7 @@ from usuario.models import UsuarioChild
 from datetime import date
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from dashboard.views import get_child_context
 
 # Create your views here.
 '''def list_routines(request):
@@ -34,16 +35,14 @@ def rotina_hoje(request):
     dias_semana = Weekday.objects.all().order_by('day')
     todas_rotinas = Routine.objects.filter(child_id=child_id).order_by('start_time') if child_id else []
     # Lista de crianças do usuário
-    children = Child.objects.filter(id__in=children_ids)
     context = {
         'rotina_hoje': routine_today,
         'data_atual': today,
         'rotina_amanha': routine_tomorrow,
         'dias_semana': dias_semana,
         'todas_rotinas': todas_rotinas,
-        'children': children,
-        'selected_child': selected_child,
     }
+    context.update(get_child_context(request))
     return render(request, 'rotina/rotinas.html', context)
 
 @csrf_exempt

@@ -1,36 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'agenda/calendario.css' %}">
+<script src="{% static 'agenda/calendario.js' %}"></script>
+
 {% block content %}
 <h1>Calendário</h1>
-<!-- Filtro de criança -->
-<div class="container mb-3">
-  <form method="get" class="row g-2 align-items-center">
-    <input type="hidden" name="mes" value="{{ mes_atual }}">
-    <input type="hidden" name="ano" value="{{ ano_atual }}">
-    <div class="col-auto">
-      <label for="child_id" class="form-label mb-0">Criança:</label>
-    </div>
-    <div class="col-auto">
-      <select name="child_id" id="child_id" class="form-select" onchange="this.form.submit()">
-        {% for child in children %}
-          <option value="{{ child.id }}" {% if selected_child and child.id == selected_child.id %}selected{% endif %}>{{ child.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </form>
-</div>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoEvento">
-    Novo Evento
-</button>
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-  <select id="mes" onchange="window.location.search='?mes='+this.value+'&ano='+document.getElementById('ano').value+'&child_id='+document.getElementById('child_id').value;">
+  <select id="mes" onchange="window.location.search='?mes='+this.value+'&ano='+document.getElementById('ano').value;">
     {% for m in meses %}
       <option value="{{ forloop.counter }}" {% if forloop.counter == mes_atual %}selected{% endif %}>{{ m }}</option>
     {% endfor %}
   </select>
   <span style="margin: 0 10px;">/</span>
-  <select id="ano" onchange="window.location.search='?mes='+document.getElementById('mes').value+'&ano='+this.value+'&child_id='+document.getElementById('child_id').value;">
+  <select id="ano" onchange="window.location.search='?mes='+document.getElementById('mes').value+'&ano='+this.value;">
     {% for a in anos %}
       <option value="{{ a }}" {% if a == ano_atual %}selected{% endif %}>{{ a }}</option>
     {% endfor %}
@@ -75,8 +57,8 @@
                           {% csrf_token %}
                           <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
                         </form>
-                        <button type="button" class="btn btn-warning btn-sm" 
-                                data-id="{{evento.id}}"
+                        <button type="button" class="btn btn-warning btn-sm btnEditarEventoUnico" 
+                                data-eventoid="{{evento.id}}"
                                 data-description="{{evento.description|escapejs}}"
                                 data-hour-init="{{evento.hour_init|time:'H:i'}}"
                                 data-hour-end="{{evento.hour_end|time:'H:i'}}"
@@ -134,4 +116,7 @@
     </div>
   </div>
 </div>
+{% block extra_js %}
+<script src="{% static 'agenda/calendario.js' %}"></script> 
+{% endblock %}
 {% endblock %}

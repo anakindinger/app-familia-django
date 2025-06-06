@@ -1,22 +1,10 @@
 {% extends 'base.html' %}
+{% block extra_head %}
 {% load static %}
+<script src="{% static 'rotina/js/modais.js' %}"></script>
+{% endblock %}
 {% block content %}
 <h1>Rotinas</h1>
-<!-- Filtro de criança -->
-<div class="container mb-3">
-  <form method="get" class="row g-2 align-items-center">
-    <div class="col-auto">
-      <label for="child_id" class="form-label mb-0">Criança:</label>
-    </div>
-    <div class="col-auto">
-      <select name="child_id" id="child_id" class="form-select" onchange="this.form.submit()">
-        {% for child in children %}
-          <option value="{{ child.id }}" {% if selected_child and child.id == selected_child.id %}selected{% endif %}>{{ child.name }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  </form>
-</div>
 <!-- Botão para abrir o modal -->
 <div class="d-flex justify-content-end gap-2" style="margin: 20px 10% 10px 10%;">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovaRotina">
@@ -114,13 +102,15 @@
                   <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
                 </form>
                 <button type="button" class="btn btn-warning btn-sm" data-edit-rotina
-      data-id="{{ rotina.id }}"
-      data-description="{{ rotina.description|escapejs }}"
-      data-start_time="{{ rotina.start_time|time:'H:i' }}"
-      data-end_time="{{ rotina.end_time|time:'H:i' }}"
-      data-start_day="{{ rotina.start_day|date:'Y-m-d' }}"
-      data-end_day="{% if rotina.end_day %}{{ rotina.end_day|date:'Y-m-d' }}{% endif %}"
-      data-dias="{% for dia in rotina.days_of_week.all %}{{ dia.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
+                        data-bs-toggle="modal" 
+                        data-bs-target="#modalEditarRotinaUnico"       
+                        data-id="{{ rotina.id }}"
+                        data-description="{{ rotina.description|escapejs }}"
+                        data-start_time="{{ rotina.start_time|time:'H:i' }}"
+                        data-end_time="{{ rotina.end_time|time:'H:i' }}"
+                        data-start_day="{{ rotina.start_day|date:'Y-m-d' }}"
+                        data-end_day="{% if rotina.end_day %}{{ rotina.end_day|date:'Y-m-d' }}{% endif %}"
+                        data-dias="{% for dia in rotina.days_of_week.all %}{{ dia.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
                 Alterar
                 </button>
               </td>
@@ -231,4 +221,7 @@
         </tbody>    
     </table>
 </div>
+{% block extra_js %}
+<script src="{% static 'rotina/js/modais.js' %}"></script>
+{% endblock %}
 {% endblock %}

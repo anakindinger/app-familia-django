@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from .models import Child, School, Health
@@ -54,3 +54,13 @@ def associar_usuario_child(request, child_id):
         UsuarioChild.objects.get_or_create(user=user, child=child)
         return redirect('dashboard:lista_children')
     return render(request, 'dashboard/associar_usuario.html', {'child': child})
+
+def get_child_context(request):
+    children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
+    children = Child.objects.filter(id__in=children_ids)
+    child_id = request.GET.get('child_id')
+    if child_id and child_id.isdigit() and int(child_id) in children_ids:
+        selected_child = get_object_or_404(Child, id=child_id)
+    else:
+        selected_child = children.first() if children else None
+    return {'children': children, 'selected_child': selected_child}

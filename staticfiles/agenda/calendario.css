@@ -1,0 +1,77 @@
+/* calendario.css - estilos para o calendário da agenda */
+
+.table-fixed-custom {
+  table-layout: fixed;
+  width: 100%;
+  background: #f8fafc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.table-fixed-custom th, .table-fixed-custom td {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px 6px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.98rem;
+}
+.table-fixed-custom th {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 600;
+}
+.bg-info-subtle {
+  background: #e3f7ff !important;
+  border-left: 4px solid #1976d2;
+  margin-bottom: 4px;
+}
+.collapse .card-body {
+  background: #f1f8e9;
+  border-radius: 6px;
+}
+.btn-primary, .btn-warning, .btn-danger {
+  font-size: 0.95rem;
+  padding: 4px 10px;
+}
+.btn-primary {
+  background: #1976d2;
+  border: none;
+}
+.btn-primary:hover {
+  background: #125ea2;
+}
+.btn-warning {
+  background: #ffb300;
+  border: none;
+  color: #333;
+}
+.btn-warning:hover {
+  background: #ffa000;
+}
+.btn-danger {
+  background: #e53935;
+  border: none;
+}
+.btn-danger:hover {
+  background: #b71c1c;
+}
+.modal-content {
+  border-radius: 10px;
+}
+.form-label {
+  font-weight: 500;
+}
+input.form-control, select.form-select {
+  border-radius: 6px;
+  font-size: 1rem;
+}
+/* Responsivo */
+@media (max-width: 768px) {
+  .table-fixed-custom th, .table-fixed-custom td {
+    font-size: 0.9rem;
+    padding: 4px 2px;
+  }
+  .container, .table-responsive {
+    margin-left: 2px !important;
+    margin-right: 2px !important;
+  }
+}

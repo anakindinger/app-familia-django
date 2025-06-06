@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from usuario.models import UsuarioChild
 from dashboard.models import Child
+from dashboard.views import get_child_context
 
 # Create your views here.
 @login_required
@@ -52,11 +53,10 @@ def index(request):
         'semanas': semanas,
         'meses': meses,
         'lista_eventos': eventos,
-        'children': children,
-        'selected_child': selected_child,
         'weekday_str': weekday_str,
         'weekday_tmr': weekday_tmr,
     }
+    context.update(get_child_context(request))
     return render(request, 'agenda/calendario.html', context)
 
 @csrf_exempt
