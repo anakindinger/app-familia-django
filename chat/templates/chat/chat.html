@@ -1,6 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Chat - {{ child.name }}</h2>
+<form method="post" class="d-flex gap-2 mb-2" id="chat-form">
+  {% csrf_token %}
+  <input type="text" name="text" id="chat-input" class="form-control" placeholder="Digite sua mensagem..." autocomplete="off" required>
+  <button type="submit" class="btn btn-primary">Gerar sugestões</button>
+</form>
+<div id="alternatives-box" class="mb-3">
+  {% if alternatives and alternatives|length > 0 %}
+    <div class="card card-body bg-light"><strong>Sugestões de mensagem:</strong>
+      <div class="d-flex flex-column gap-2 mt-2">
+        {% for alt in alternatives %}
+          <form method="post" class="alt-form">
+            {% csrf_token %}
+            <input type="hidden" name="text" value="{{ alt }}">
+            <button type="submit" class="btn btn-outline-primary w-100 text-start">{{ alt }}</button>
+          </form>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
 <div id="chat-box" class="border rounded p-3 mb-3 bg-light" style="height: 350px; overflow-y: auto;">
   {% for msg in messages %}
     <div class="mb-2">
@@ -11,13 +31,7 @@
     <p class="text-muted">Nenhuma mensagem ainda.</p>
   {% endfor %}
 </div>
-<form method="post" class="d-flex gap-2">
-  {% csrf_token %}
-  <input type="text" name="text" class="form-control" placeholder="Digite sua mensagem..." autocomplete="off" required>
-  <button type="submit" class="btn btn-primary">Enviar</button>
-</form>
 <script>
-// Scroll automático para o final do chat
 window.onload = function() {
   var chatBox = document.getElementById('chat-box');
   chatBox.scrollTop = chatBox.scrollHeight;

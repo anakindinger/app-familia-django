@@ -83,6 +83,7 @@
                 <th>Data início</th>
                 <th>Data fim</th>
                 <th>Dias da semana</th>
+                <th>Status</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -96,6 +97,9 @@
                 <td>{% if rotina.end_day %}{{ rotina.end_day|date:'d/m/Y' }}{% else %}-{% endif %}</td>
                 <td>
                   {% for dia in rotina.days_of_week.all %}{{ dia }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </td>
+                <td>
+                  <span class="badge {% if rotina.status == 'pendente' %}bg-warning text-dark{% else %}bg-success{% endif %}">{{ rotina.get_status_display }}</span>
                 </td>
                 <td>
                   <form method="post" action="{% url 'rotina:excluir_rotina' rotina.id %}?child_id={{ selected_child.id }}" style="display:inline;">
@@ -114,10 +118,16 @@
                           data-dias="{% for dia in rotina.days_of_week.all %}{{ dia.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
                   Alterar
                   </button>
+                  {% if rotina.status == 'pendente' %}
+                  <form method="post" action="{% url 'rotina:aprovar_rotina' rotina.id %}?child_id={{ selected_child.id }}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+                  </form>
+                  {% endif %}
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="7">Nenhuma rotina cadastrada.</td></tr>
+              <tr><td colspan="8">Nenhuma rotina cadastrada.</td></tr>
               {% endfor %}
             </tbody>
           </table>

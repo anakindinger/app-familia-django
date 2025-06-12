@@ -3,6 +3,12 @@ from datetime import date
 from dashboard.models import Child
 
 
+STATUS_CHOICES = [
+    ('pendente', 'Pendente'),
+    ('aprovado', 'Aprovado'),
+]
+
+
 class Routine(models.Model):
     description = models.CharField(max_length=255)
     start_time = models.TimeField()
@@ -11,9 +17,11 @@ class Routine(models.Model):
     start_day = models.DateField(default=date.today)
     end_day = models.DateField(blank=True, null=True)
     child = models.ForeignKey(Child, on_delete=models.CASCADE, related_name='rotinas')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
 
     def __str__(self):
         return self.description
+
 
 class Weekday(models.Model):
     WEEK_DAYS = [

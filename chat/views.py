@@ -6,6 +6,7 @@ from .models import Message
 from usuario.models import UsuarioChild
 from django.utils import timezone
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -38,6 +39,19 @@ def process_message_text(text,):
     except Exception as e:
         return [f"Erro ao gerar resposta: {e}"]
 
+def generate_alternatives(text):
+    """Gera 3 alternativas para a mensagem usando o modelo."""
+    try:
+        responses = []
+        for _ in range(3):
+            response = model.generate_content(text)
+            if response and response.text:
+                responses.append(response.text)
+            else:
+                responses.append("Não foi possível gerar alternativa.")
+        return responses
+    except Exception as e:
+        return [f"Erro ao gerar resposta: {e}"] * 3
 
 @login_required
 def chat_view(request, child_id):
@@ -46,13 +60,15 @@ def chat_view(request, child_id):
     if not UsuarioChild.objects.filter(user=request.user, child=child).exists():
         return redirect('dashboard:index')
     messages = Message.objects.filter(child=child).select_related('user').order_by('created_at')
+    alternatives = []
     if request.method == 'POST':
         text = request.POST.get('text')
         if text:
             processed_text = process_message_text(text)
             Message.objects.create(child=child, user=request.user, text=processed_text, created_at=timezone.now())
-            return redirect('chat:chat', child_id=child.id)
-    return render(request, 'chat/chat.html', {'child': child, 'messages': messages})
+            alternatives = generate_alternatives(text)
+    context = {'child': child, 'messages': messages, 'alternatives': alternatives}
+    return render(request, 'chat/chat.html', context)
 
 @login_required
 def chat_messages_json(request, child_id):

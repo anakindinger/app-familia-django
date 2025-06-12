@@ -99,15 +99,27 @@ def alterar_evento(request, evento_id):
     evento = get_object_or_404(Evento, id=evento_id)
     children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
     if evento.child_id not in children_ids:
-        return redirect('evento:index')
+        return redirect('agenda:index')
     if request.method == 'POST':
-        evento.descricao = request.POST.get('description')
+        evento.description = request.POST.get('description')
         evento.hour_init = request.POST.get('hour_init')
         evento.hour_end = request.POST.get('hour_end')
-        evento.date = request.POST.getlist('date')
+        evento.date = request.POST.get('date')
+        evento.status = 'pendente'
         evento.save()
-        return redirect(f"{request.path}?child_id={evento.child_id}")
-  
+        return redirect(f"/agenda/?child_id={evento.child_id}")
     children = Child.objects.filter(id__in=children_ids)
     context = {'evento': evento, 'children': children, 'selected_child': evento.child}
     return render(request, 'agenda/calendario.html', context)
+
+@login_required
+def aprovar_evento(request, evento_id):
+    evento = get_object_or_404(Evento, id=evento_id)
+    children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
+    if evento.child_id not in children_ids:
+        return redirect('agenda:index')
+    if request.method == 'POST' and evento.status == 'pendente':
+        evento.status = 'aprovado'
+        evento.save()
+        return redirect('dashboard:recados')
+    return redirect('dashboard:recados')

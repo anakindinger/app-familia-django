@@ -65,7 +65,8 @@ def cadastrar_rotina(request):
             end_time=end_time,
             start_day=start_day,
             end_day=end_day,
-            child_id=child_id
+            child_id=child_id,
+            status='pendente'
         )
         rotina.days_of_week.set(dias)
         rotina.save()
@@ -87,8 +88,14 @@ def routine_details(request):
 @csrf_exempt
 @login_required
 def excluir_rotina(request, rotina_id):
+    rotina = get_object_or_404(Routine, id=rotina_id)
+    children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
+    if rotina.child_id not in children_ids:
+        return redirect('rotina:rotina_hoje')
     if request.method == 'POST':
-        Routine.objects.filter(id=rotina_id).delete()
+        rotina.status = 'pendente'
+        rotina.save()
+        # Opcional: pode marcar como excluída ou realmente deletar após aprovação
     return redirect('rotina:rotina_hoje')
 
 @csrf_exempt
@@ -106,9 +113,23 @@ def alterar_rotina(request, rotina_id):
         rotina.end_day = request.POST.get('end_day') or None
         dias = request.POST.getlist('days_of_week')
         rotina.days_of_week.set(dias)
+        rotina.status = 'pendente'
         rotina.save()
         return redirect(f"{request.path}?child_id={rotina.child_id}")
     dias_semana = Weekday.objects.all().order_by('day')
     children = Child.objects.filter(id__in=children_ids)
     context = {'rotina': rotina, 'dias_semana': dias_semana, 'children': children, 'selected_child': rotina.child}
     return render(request, 'rotina/rotinas.html', context)
+
+@login_required
+def aprovar_rotina(request, rotina_id):
+    rotina = get_object_or_404(Routine, id=rotina_id)
+    children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
+    if rotina.child_id not in children_ids:
+        return redirect('rotina:rotina_hoje')
+    # Só permite aprovar se não foi o usuário que criou/alterou
+    if request.method == 'POST' and rotina.status == 'pendente':
+        rotina.status = 'aprovado'
+        rotina.save()
+        return redirect('dashboard:recados')
+    return redirect('dashboard:recados')

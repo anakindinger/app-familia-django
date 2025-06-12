@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Recados e Autorizações</h2>
+<div class="mb-4">
+  <h4>Alterações pendentes de aprovação</h4>
+  {% if pendentes %}
+    <ul class="list-group mb-3">
+      {% for item in pendentes %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            {% if item.tipo == 'rotina' %}
+              <strong>Rotina:</strong> {{ item.obj.description }}
+            {% elif item.tipo == 'evento' %}
+              <strong>Evento:</strong> {{ item.obj.description }}
+            {% elif item.tipo == 'school' %}
+              <strong>Escola:</strong> {{ item.obj.name }}
+            {% elif item.tipo == 'health' %}
+              <strong>Saúde:</strong> {{ item.obj.alergy }}
+            {% endif %}
+            <span class="text-secondary small ms-2">({{ item.obj.child.name }})</span>
+          </div>
+          <form method="post" action="{{ item.url }}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Nenhuma alteração pendente de aprovação.</p>
+  {% endif %}
+</div>
+<div>
+  <h4>Últimas atualizações</h4>
+  {% if ultimas %}
+    <ul class="list-group list-group-flush">
+      {% for up in ultimas %}
+        <li class="list-group-item">
+          {% if up.tipo == 'evento' %}
+            <strong>Evento:</strong> {{ up.obj.description }}<br>
+            <span class="text-secondary small">{{ up.obj.date|date:'d/m/Y' }} {{ up.obj.hour_init|default:'' }}</span>
+          {% elif up.tipo == 'rotina' %}
+            <strong>Rotina:</strong> {{ up.obj.description }}<br>
+            <span class="text-secondary small">{{ up.obj.start_day|date:'d/m/Y' }} {{ up.obj.start_time|default:'' }}</span>
+          {% elif up.tipo == 'school' %}
+            <strong>Escola:</strong> {{ up.obj.name }}<br>
+            <span class="text-secondary small">{{ up.obj.child.name }}</span>
+          {% elif up.tipo == 'health' %}
+            <strong>Saúde:</strong> {{ up.obj.alergy }}<br>
+            <span class="text-secondary small">{{ up.obj.child.name }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Nenhuma atualização recente.</p>
+  {% endif %}
+</div>
+{% endblock %}

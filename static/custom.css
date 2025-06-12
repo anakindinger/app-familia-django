@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Delius+Swash+Caps&family=Modak&family=Chewy&display=swap');
+
+body {
+    background: linear-gradient(135deg, #e0f7fa 60%, #e8f5e9 100%);
+    font-family: Arial, sans-serif;
+    color: #234;
+}
+
+.navbar {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    background: linear-gradient(90deg, #4fc3f7 0%, #43e97b 100%) !important;
+    border-bottom: 4px solid #1de9b6;
+    font-family:  'Chewy', Arial, sans-serif;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #1976d2 !important;
+    letter-spacing: 1px;
+    font-size: 1.6rem;
+    text-shadow: 1px 1px 0 #e3f2fd;
+}
+
+.nav-link.active, .nav-link:focus, .nav-link:hover {
+    color: #1976d2 !important;
+    font-weight: 600;
+    background: #e3f2fd;
+    border-radius: 8px;
+}
+
+.container {
+    background: #f1f8e9;
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(33, 203, 243, 0.10);
+    padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border: 3px dashed #4fc3f7;
+}
+
+.btn-primary, .btn-outline-primary {
+    border-radius: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 1.1rem;
+    transition: 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+    border: none;
+    color: #fff;
+    box-shadow: 0 2px 8px #ffb74d33;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(90deg, #ffb74d 60%, #ff9800 100%);
+    color: #fff;
+}
+
+.btn-outline-primary {
+    border: 2px solid #ff9800;
+    color: #ff9800;
+    background: #f1f8e9;
+}
+
+.btn-outline-primary:hover {
+    background: #e3f2fd;
+    color: #ff9800;
+    border-color: #ffb74d;
+}
+
+.card {
+    border-radius: 18px;
+    border: 2px solid #4fc3f7;
+    box-shadow: 0 2px 12px #4fc3f722;
+    background: #e3f2fd;
+}
+
+#chat-box {
+    background: linear-gradient(135deg, #e3f2fd 60%, #f1f8e9 100%) !important;
+    border: 2.5px solid #4fc3f7 !important;
+    border-radius: 18px;
+}
+
+#alternatives-box .btn {
+    margin-bottom: 0.7rem;
+    font-size: 1.05rem;
+}
+
+.form-control:focus {
+    border-color: #43e97b;
+    box-shadow: 0 0 0 0.2rem #43e97b44;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    background: #e3f2fd;
+}
+::-webkit-scrollbar-thumb {
+    background: #4fc3f7;
+    border-radius: 8px;
+}
+
+/* Elementos lúdicos */
+h1, h2, .navbar-brand {
+    font-family:  'Chewy', Arial, sans-serif;
+}
+
+
+#chat-box .mb-2 {
+    background: #e3f2fd;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.7rem;
+    border-left: 6px solid #43e97b;
+    box-shadow: 0 1px 4px #4fc3f722;
+}
+
+label, .form-label {
+    color: #1976d2;
+    font-weight: 600;
+}
+
+select.form-select {
+    background: #e3f2fd;
+    border: 2px solid #4fc3f7;
+    border-radius: 10px;
+    color: #1976d2;
+    font-weight: 500;
+}
+
+#chat-box .mb-2 strong {
+    color: #43e97b;
+}
