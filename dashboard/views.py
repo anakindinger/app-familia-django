@@ -85,30 +85,42 @@ def associar_usuario_child(request, child_id):
 @login_required
 def recados(request):
     children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
+    # Seleção de criança: usa SEMPRE a lógica do context_processor (sessão), nunca seleciona automaticamente
+    selected_child = None
+    selected_child_id = request.session.get('selected_child_id')
+    if selected_child_id and selected_child_id in children_ids:
+        selected_child = get_object_or_404(Child, id=selected_child_id)
+        children_ids = [selected_child_id]
+    else:
+        selected_child = Child.objects.filter(id__in=children_ids).first()
+        if selected_child:
+            children_ids = [selected_child.id]
+        else:
+            children_ids = []
     pendentes = []
     # Rotinas pendentes
-    for r in Routine.objects.filter(child_id__in=children_ids, status='pendente'):
+    for r in Routine.objects.filter(child_id=selected_child.id if selected_child else None, status='pendente'):
         pendentes.append({
             'tipo': 'rotina',
             'obj': r,
             'url': reverse('rotina:aprovar_rotina', args=[r.id]) + f'?child_id={r.child_id}'
         })
     # Eventos pendentes
-    for e in Evento.objects.filter(child_id__in=children_ids, status='pendente'):
+    for e in Evento.objects.filter(child_id=selected_child.id if selected_child else None, status='pendente'):
         pendentes.append({
             'tipo': 'evento',
             'obj': e,
             'url': reverse('agenda:aprovar_evento', args=[e.id]) + f'?child_id={e.child_id}'
         })
     # School pendentes
-    for s in School.objects.filter(child_id__in=children_ids, status='pendente'):
+    for s in School.objects.filter(child_id=selected_child.id if selected_child else None, status='pendente'):
         pendentes.append({
             'tipo': 'school',
             'obj': s,
             'url': reverse('dashboard:aprovar_school', args=[s.id]) + f'?child_id={s.child_id}'
         })
     # Health pendentes
-    for h in Health.objects.filter(child_id__in=children_ids, status='pendente'):
+    for h in Health.objects.filter(child_id=selected_child.id if selected_child else None, status='pendente'):
         pendentes.append({
             'tipo': 'health',
             'obj': h,
@@ -116,27 +128,25 @@ def recados(request):
         })
     # Últimas atualizações aprovadas
     ultimas = []
-    for e in Evento.objects.filter(child_id__in=children_ids, status='aprovado').order_by('-date', '-hour_init')[:3]:
+    for e in Evento.objects.filter(child_id=selected_child.id if selected_child else None, status='aprovado').order_by('-date', '-hour_init')[:3]:
         ultimas.append({'tipo': 'evento', 'obj': e})
-    for r in Routine.objects.filter(child_id__in=children_ids, status='aprovado').order_by('-start_day', '-start_time')[:3]:
+    for r in Routine.objects.filter(child_id=selected_child.id if selected_child else None, status='aprovado').order_by('-start_day', '-start_time')[:3]:
         ultimas.append({'tipo': 'rotina', 'obj': r})
-    for s in School.objects.filter(child_id__in=children_ids, status='aprovado').order_by('-id')[:1]:
+    for s in School.objects.filter(child_id=selected_child.id if selected_child else None, status='aprovado').order_by('-id')[:1]:
         ultimas.append({'tipo': 'school', 'obj': s})
-    for h in Health.objects.filter(child_id__in=children_ids, status='aprovado').order_by('-id')[:1]:
+    for h in Health.objects.filter(child_id=selected_child.id if selected_child else None, status='aprovado').order_by('-id')[:1]:
         ultimas.append({'tipo': 'health', 'obj': h})
     def get_sort_date(obj):
-        # Retorna uma data para ordenação, ou um valor mínimo se None
         d = getattr(obj, 'date', None)
         if d is not None:
             return d
         d = getattr(obj, 'start_day', None)
         if d is not None:
             return d
-        # Retorna uma data antiga para garantir que None fique no final
         from datetime import date as _date
         return _date(1900, 1, 1)
     ultimas = sorted(ultimas, key=lambda x: get_sort_date(x['obj']), reverse=True)[:5]
-    context = {'pendentes': pendentes, 'ultimas': ultimas}
+    context = {'pendentes': pendentes, 'ultimas': ultimas, 'children': Child.objects.filter(id__in=UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)), 'selected_child': selected_child}
     return render(request, 'dashboard/recados.html', context)
 
 def get_child_context(request):
