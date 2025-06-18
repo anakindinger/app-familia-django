@@ -21,7 +21,7 @@ def login_view(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('agenda:index')  # ou outra página inicial
+            return redirect('dashboard:index')  # Redireciona para a página de boas-vindas
     else:
         form = AuthenticationForm()
     return render(request, 'usuario/login.html', {'form': form})

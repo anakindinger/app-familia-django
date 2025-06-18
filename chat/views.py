@@ -63,10 +63,13 @@ def chat_view(request, child_id):
     alternatives = []
     if request.method == 'POST':
         text = request.POST.get('text')
-        if text:
-            processed_text = process_message_text(text)
-            Message.objects.create(child=child, user=request.user, text=processed_text, created_at=timezone.now())
+        ia_selected = request.POST.get('ia_selected')
+        if text and not ia_selected:
+            # Gera alternativas, mas não salva nada ainda
             alternatives = generate_alternatives(text)
+        elif ia_selected:
+            # Salva apenas a alternativa escolhida pelo usuário
+            Message.objects.create(child=child, user=request.user, text=ia_selected, created_at=timezone.now())
     context = {'child': child, 'messages': messages, 'alternatives': alternatives}
     return render(request, 'chat/chat.html', context)
 

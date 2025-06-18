@@ -13,8 +13,8 @@
         {% for alt in alternatives %}
           <form method="post" class="alt-form">
             {% csrf_token %}
-            <input type="hidden" name="text" value="{{ alt }}">
-            <button type="submit" class="btn btn-outline-primary w-100 text-start">{{ alt }}</button>
+            <input type="hidden" name="ia_selected" value="{{ alt }}">
+            <button type="submit" class="btn btn-outline-primary w-100 text-start alt-btn">{{ alt }}</button>
           </form>
         {% endfor %}
       </div>
@@ -36,5 +36,13 @@ window.onload = function() {
   var chatBox = document.getElementById('chat-box');
   chatBox.scrollTop = chatBox.scrollHeight;
 };
+// Destacar botão selecionado
+const altForms = document.querySelectorAll('.alt-form');
+altForms.forEach(form => {
+  form.addEventListener('click', function(e) {
+    altForms.forEach(f => f.querySelector('.alt-btn').classList.remove('active'));
+    this.querySelector('.alt-btn').classList.add('active');
+  });
+});
 </script>
 {% endblock %}

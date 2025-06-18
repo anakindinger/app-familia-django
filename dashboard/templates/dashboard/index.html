@@ -5,4 +5,23 @@
   <p>Selecione uma criança no topo para visualizar rotinas, eventos, chat e recados.</p>
   <a href="{% url 'dashboard:recados' %}" class="btn btn-primary mt-3">Ir para Recados</a>
 </div>
+{% if perfil and perfil.child %}
+<div class="card mt-5 mx-auto" style="max-width: 500px;">
+  <div class="card-header bg-info text-white">
+    <h4 class="mb-0">Perfil da Criança</h4>
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">{{ perfil.child.name }}</h5>
+    <p class="card-text mb-1"><strong>Data de nascimento:</strong> {{ perfil.child.dn|date:'d/m/Y' }}</p>
+    <p class="card-text mb-1"><strong>Peso:</strong> {{ perfil.child.weight }} kg</p>
+    <p class="card-text mb-1"><strong>Altura:</strong> {{ perfil.child.height }} m</p>
+    {% if perfil.school %}
+      <p class="card-text mb-1"><strong>Escola:</strong> {{ perfil.school.name }} ({{ perfil.school.classroom }})</p>
+    {% endif %}
+    {% if perfil.health %}
+      <p class="card-text mb-1"><strong>Saúde:</strong> {% if perfil.health.alergy %}Alergias: {{ perfil.health.alergy }}{% else %}Sem alergias cadastradas{% endif %}</p>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
 {% endblock %}
