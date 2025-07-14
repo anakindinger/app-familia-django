@@ -11,7 +11,7 @@
   </button>
 </div>
 <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 10px;">
-  <select id="mes" onchange="window.location.search='?mes='+this.value+'&ano='+document.getElementById('ano').value;">
+  <select id="mes" onchange="window.location.search='?child_id={{ selected_child.id }}'+'&mes='+this.value+'&ano='+document.getElementById('ano').value;">
     {% for m in meses %}
       <option value="{{ forloop.counter }}" {% if forloop.counter == mes_atual %}selected{% endif %}>{{ m }}</option>
     {% endfor %}

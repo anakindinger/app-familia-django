@@ -90,8 +90,10 @@ def cadastrar_evento(request):
 @login_required
 def excluir_evento(request, evento_id):
     if request.method == 'POST':
+        evento = Evento.objects.filter(id=evento_id).first()
+        child_id = evento.child_id if evento else None
         Evento.objects.filter(id=evento_id).delete()
-    return redirect('agenda:index')
+    return redirect(f"/agenda/?child_id={child_id}")
 
 @csrf_exempt
 @login_required
