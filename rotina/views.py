@@ -70,7 +70,7 @@ def cadastrar_rotina(request):
         )
         rotina.days_of_week.set(dias)
         rotina.save()
-        return redirect(f"{request.path}?child_id={child_id}")
+        return redirect(f"/rotina/?child_id={rotina.child_id}")
     else:
         dias_semana = Weekday.objects.all().order_by('day')
         children = Child.objects.filter(id__in=children_ids)
@@ -115,7 +115,7 @@ def alterar_rotina(request, rotina_id):
         rotina.days_of_week.set(dias)
         rotina.status = 'pendente'
         rotina.save()
-        return redirect(f"{request.path}?child_id={rotina.child_id}")
+        return redirect(f"/rotina/?child_id={rotina.child_id}")
     dias_semana = Weekday.objects.all().order_by('day')
     children = Child.objects.filter(id__in=children_ids)
     context = {'rotina': rotina, 'dias_semana': dias_semana, 'children': children, 'selected_child': rotina.child}
