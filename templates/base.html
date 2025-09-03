@@ -13,7 +13,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <nav class="navbar navbar-expand-lg  mb-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'dashboard:index' %}">App Família</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           {% if user.is_authenticated %}
           <form method="get" id="child-filter-form" class="d-flex align-items-center me-3" action="" style="gap: 8px;">
-            <label for="child_id" class="form-label mb-0">Criança:</label>
+            <label for="child_id" class="form-label-child mb-0">Criança:</label>
             <select name="child_id" id="child_id" class="form-select" style="width:auto;" onchange="this.form.submit()">
               {% for child in children %}
                 <option value="{{ child.id }}" {% if selected_child and child.id == selected_child.id %}selected{% endif %}>{{ child.name }}</option>

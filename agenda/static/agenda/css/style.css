@@ -1,3 +1,8 @@
+:root {
+  --bg-color: #e7eaec;
+  --primary-color: #123141;
+  --success-color: #49c5b1;
+}
 .table-fixed-custom{
     table-layout: fixed;
     width: 100%;
@@ -7,4 +12,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
+.table-head  {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+}
