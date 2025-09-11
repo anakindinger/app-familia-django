@@ -91,12 +91,11 @@ def excluir_rotina(request, rotina_id):
     rotina = get_object_or_404(Routine, id=rotina_id)
     children_ids = UsuarioChild.objects.filter(user=request.user).values_list('child_id', flat=True)
     if rotina.child_id not in children_ids:
-        return redirect('rotina:rotina_hoje')
+        return redirect(f"/rotina/?child_id={rotina.child_id}")
     if request.method == 'POST':
-        rotina.status = 'pendente'
-        rotina.save()
+        rotina.delete()
         # Opcional: pode marcar como excluída ou realmente deletar após aprovação
-    return redirect('rotina:rotina_hoje')
+    return redirect(f"/rotina/?child_id={rotina.child_id}")
 
 @csrf_exempt
 @login_required
